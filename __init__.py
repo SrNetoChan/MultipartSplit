@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- SplitMultipart
+ MultipartSplit
                                  A QGIS plugin
  Split selected multipart features during edit session
                              -------------------
@@ -31,7 +31,7 @@ def description():
 
 
 def version():
-    return "Version 0.1"
+    return "Version 0.2"
 
 
 def icon():
