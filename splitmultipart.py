@@ -75,7 +75,10 @@ class SplitMultipart:
         			
         layer = self.iface.mapCanvas().currentLayer()
         if not layer.isEditable():
-            pass # Add warning asking for an Editable vector Layer
+            # If no editable layer is selected, throw a message and return
+            QMessageBox.information(None,QCoreApplication.translate('Multipart split','Information'), \
+               QCoreApplication.translate('Multipart split','Please select an editable vector layer'))
+            return None
         else:
             provider = layer.dataProvider()
             new_features = []
@@ -124,6 +127,11 @@ class SplitMultipart:
                 layer.endEditCommand()
             else:
                 layer.destroyEditCommand()
+            
+            # inform user about the end of the process and the results
+            message = "Splited " + str(n_of_splitted_features) + " multipart feature(s) into " + \
+            str(n_of_new_features + n_of_splitted_features) + " singlepart ones."
+            self.iface.mainWindow().statusBar().showMessage(message)
                 
             #print ("Splited " + str(n_of_splitted_features) + " feature(s) into " +
             #str(n_of_new_features + n_of_splitted_features) + " new ones.")
