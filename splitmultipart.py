@@ -96,21 +96,24 @@ class SplitMultipart:
                     #remove_list.append(feature.id())
                     
                     # Get attributes from original feature
+                    ### CHANGE  - adapt to 1.9 API, the result of pendingFields is now a QgsFields
+                    ### Instead of a list of QgsField
                     new_attributes = layer.pendingFields()
+                    
                     for j in new_attributes:
                         if provider.defaultValue(j).isNull():
+                            ### CHANGE - 
                             new_attributes[j] = feature.attributeMap()[j]
                         else:
                             new_attributes[j] = provider.defaultValue(j)
                             
-                    ## temp_feature.setAttributeMap(new_attributes)
-                    
-                    # Get parts from original feature
+                    # Get parts geometries from original feature
                     parts = geom.asGeometryCollection ()
                             
                     # from 2nd to last part create a new features using their
                     # single geometry and the attributes of the original feature
                     temp_feature = QgsFeature()
+                    #### CHANGE - Probably ther is no longer a setAttributeMap() try setAttributes
                     temp_feature.setAttributeMap(new_attributes)
                     for i in range(1,len(parts)):
                         temp_feature.setGeometry(parts[i])
