@@ -100,10 +100,13 @@ class SplitMultipart:
                     ### Instead of a list of QgsField
                     new_attributes = layer.pendingFields()
                     
-                    for j in new_attributes:
+                    for j in range(new_attributes.__len__()):
                         if provider.defaultValue(j).isNull():
                             ### CHANGE - 
-                            new_attributes[j] = feature.attributeMap()[j]
+                            if QGis.QGIS_VERSION_INT < 10900:
+                                new_attributes[j] = feature.attributeMap()[j]
+                            else:
+                                new_attributes[j] = feature.attributes()[j]
                         else:
                             new_attributes[j] = provider.defaultValue(j)
                             
@@ -113,8 +116,13 @@ class SplitMultipart:
                     # from 2nd to last part create a new features using their
                     # single geometry and the attributes of the original feature
                     temp_feature = QgsFeature()
+                    
                     #### CHANGE - Probably ther is no longer a setAttributeMap() try setAttributes
-                    temp_feature.setAttributeMap(new_attributes)
+                    if QGis.QGIS_VERSION_INT < 10900:
+                        temp_feature.setAttributeMap(new_attributes)
+                    else:
+                        temp_feature.setAttributes(new_attributes)
+                    
                     for i in range(1,len(parts)):
                         temp_feature.setGeometry(parts[i])
                         new_features.append(QgsFeature(temp_feature))
