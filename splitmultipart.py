@@ -85,43 +85,34 @@ class SplitMultipart:
             n_of_splitted_features = 0
             n_of_new_features = 0
 
-            ## IMPROVE Check if Layer is selected and if is in edit mode
-
             layer.beginEditCommand("Split features")
             for feature in layer.selectedFeatures():
                 geom = feature.geometry()
                 # if feature geometry is multipart starts split processing
                 if geom.isMultipart():
                     n_of_splitted_features += 1
-                    #remove_list.append(feature.id())
+                    temp_feature = QgsFeature()
                     
                     # Get attributes from original feature
-                    ### CHANGE  - adapt to 1.9 API, the result of pendingFields is now a QgsFields
-                    ### Instead of a list of QgsField
-                    new_attributes = layer.pendingFields()
-                    
-                    for j in range(new_attributes.__len__()):
-                        if provider.defaultValue(j).isNull():
-                            ### CHANGE - 
-                            if QGis.QGIS_VERSION_INT < 10900:
-                                new_attributes[j] = feature.attributeMap()[j]
-                            else:
-                                new_attributes[j] = feature.attributes()[j]
-                        else:
-                            new_attributes[j] = provider.defaultValue(j)
-                            
+                    # Because of changes in the way the 1.9 api handle attributes
+                    if QGis.QGIS_VERSION_INT < 10900: 
+                        new_attributes = feature.attributeMap()
+                        for j in range(new_attributes.__len__()):
+                            if not provider.defaultValue(j).isNull():
+                                new_attributes[j] = provider.defaultValue(j)
+                        temp_feature.setAttributeMap(new_attributes)
+                    else:
+                        new_attributes = feature.attributes()
+                        for j in range(new_attributes.__len__()):
+                            if not provider.defaultValue(j).isNull():
+                                new_attributes[j] = provider.defaultValue(j)
+                        temp_feature.setAttributes(new_attributes)
+                        
                     # Get parts geometries from original feature
                     parts = geom.asGeometryCollection ()
                             
                     # from 2nd to last part create a new features using their
                     # single geometry and the attributes of the original feature
-                    temp_feature = QgsFeature()
-                    
-                    #### CHANGE - Probably ther is no longer a setAttributeMap() try setAttributes
-                    if QGis.QGIS_VERSION_INT < 10900:
-                        temp_feature.setAttributeMap(new_attributes)
-                    else:
-                        temp_feature.setAttributes(new_attributes)
                     
                     for i in range(1,len(parts)):
                         temp_feature.setGeometry(parts[i])
@@ -143,6 +134,3 @@ class SplitMultipart:
             message = "Splited " + str(n_of_splitted_features) + " multipart feature(s) into " + \
             str(n_of_new_features + n_of_splitted_features) + " singlepart ones."
             self.iface.mainWindow().statusBar().showMessage(message)
-                
-            #print ("Splited " + str(n_of_splitted_features) + " feature(s) into " +
-            #str(n_of_new_features + n_of_splitted_features) + " new ones.")

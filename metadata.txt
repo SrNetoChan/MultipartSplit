@@ -12,7 +12,7 @@
 name=Multipart Split
 qgisMinimumVersion=1.8
 description=Split selected multipart features during edit session
-version=0.3
+version=0.4
 author=Alexandre Neto
 email=senhor.neto@gmail.com
 
@@ -22,8 +22,7 @@ email=senhor.neto@gmail.com
 
 # Uncomment the following line and add your changelog entries:
 changelog=
-    Prompt user for an editable vector layer
-    Inform user about the end of the process and the resulting features
+    code adapted to work in master version
 
 # tags are comma separated with spaces allowed
 tags=multipart; singlepart; split
