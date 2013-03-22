@@ -57,18 +57,18 @@ class SplitMultipart:
         # Create action that will start plugin configuration
         self.action = QAction(
             QIcon(":/plugins/splitmultipart/icon.png"),
-            u"Split selected multipart features", self.iface.mainWindow())
+            u"Split Selected Multipart features", self.iface.mainWindow())
         # connect the action to the run method
         QObject.connect(self.action, SIGNAL("triggered()"), self.run)
 
         # Add toolbar button and menu item
-        self.iface.addToolBarIcon(self.action)
-        self.iface.addPluginToMenu(u"&Multipart Split", self.action)
+        self.iface.advancedDigitizeToolBar().addAction(self.action)
+        self.iface.editMenu().addAction(self.action)
 
     def unload(self):
         # Remove the plugin menu item and icon
-        self.iface.removePluginMenu(u"&Multipart Split", self.action)
-        self.iface.removeToolBarIcon(self.action)
+        self.iface.editMenu().removeAction(self.action)ideo
+        self.iface.advancedDigitizeToolBar().removeAction(self.action)
 
     # run method that performs all the real work
     def run(self):
