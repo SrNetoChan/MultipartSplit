@@ -39,7 +39,7 @@ def icon():
 
 
 def qgisMinimumVersion():
-    return "1.8"
+    return "2.0"
 
 def author():
     return "Alexandre Neto"
