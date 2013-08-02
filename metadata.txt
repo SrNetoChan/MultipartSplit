@@ -31,7 +31,7 @@ tags=multipart; singlepart; split
 homepage=http://hub.qgis.org/projects/multipartsplit
 tracker=http://hub.qgis.org/projects/multipartsplit/issues
 repository=https://github.com/SrNetoChan/MultipartSplit.git
-icon=icon.png
+icon=icon.svg
 # experimental flag
 experimental=True
 

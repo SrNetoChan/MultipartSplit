@@ -56,7 +56,7 @@ class SplitMultipart:
     def initGui(self):
         # Create action that will start plugin configuration
         self.action = QAction(
-            QIcon(":/plugins/splitmultipart/icon.png"),
+            QIcon(":/plugins/splitmultipart/icon.svg"),
             u"Split Selected Multipart features", self.iface.mainWindow())
         # connect the action to the run method
         QObject.connect(self.action, SIGNAL("triggered()"), self.run)
