@@ -24,6 +24,8 @@ email=senhor.neto@gmail.com
 changelog=
     0.4 code adapted to work in master version
     0.5 code adapted to work with new SIP API 2.0
+        new svg icon
+        non blocking messages with messageBar
 
 # tags are comma separated with spaces allowed
 tags=multipart; singlepart; split
