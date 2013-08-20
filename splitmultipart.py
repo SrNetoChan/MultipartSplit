@@ -26,7 +26,7 @@ from PyQt4.QtGui import *
 # Initialize Qt resources from file resources.py
 import resources_rc
 # Import the code for the dialog
-from splitmultipartdialog import SplitMultipartDialog
+# from splitmultipartdialog import SplitMultipartDialog
 
 
 class SplitMultipart:
@@ -34,6 +34,7 @@ class SplitMultipart:
     def __init__(self, iface):
         # Save reference to the QGIS interface
         self.iface = iface
+        self.canvas = self.iface.mapCanvas()
         # initialize plugin directory
         self.plugin_dir = QFileInfo(QgsApplication.qgisUserDbFilePath()).path() + "/python/plugins/splitmultipart"
         # initialize locale
@@ -51,19 +52,39 @@ class SplitMultipart:
                 QCoreApplication.installTranslator(self.translator)
 
         # Create the dialog (after translation) and keep reference
-        self.dlg = SplitMultipartDialog()
+        # self.dlg = SplitMultipartDialog() APAGAR!?
 
     def initGui(self):
         # Create action that will start plugin configuration
         self.action = QAction(
             QIcon(":/plugins/splitmultipart/icon.svg"),
             u"Split Selected Multipart features", self.iface.mainWindow())
-        # connect the action to the run method
+        self.action.setEnabled(False)
+        
+        # connect to signals for button behavior
         QObject.connect(self.action, SIGNAL("triggered()"), self.run)
+        QObject.connect(self.iface, SIGNAL("currentLayerChanged(QgsMapLayer*)"), self.toggle)
 
         # Add toolbar button and menu item
         self.iface.advancedDigitizeToolBar().addAction(self.action)
         self.iface.editMenu().addAction(self.action)
+    
+    def toggle(self):
+        mc = self.canvas
+        layer = mc.currentLayer()
+        
+        # Decide whether the plugin button is enable or disable
+        if layer <> None:
+            if layer.isEditable(): #AND layer.selectedFeatureCount() != 0:
+                self.action.setEnabled(True)
+                QObject.connect(layer,SIGNAL("editingStopped()"),self.toggle)
+                QObject.disconnect(layer,SIGNAL("editingStarted()"),self.toggle)
+                # set enable
+            else:
+                self.action.setEnabled(False)
+                QObject.connect(layer,SIGNAL("editingStarted()"),self.toggle)
+                QObject.disconnect(layer,SIGNAL("editingStopped()"),self.toggle)
+                # set disable
 
     def unload(self):
         # Remove the plugin menu item and icon
