@@ -26,6 +26,7 @@ changelog=
     0.5 code adapted to work with new SIP API 2.0
         new svg icon
         non blocking messages with messageBar
+        translation support added
 
 # tags are comma separated with spaces allowed
 tags=multipart; singlepart; split
