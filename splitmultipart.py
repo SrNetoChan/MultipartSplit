@@ -52,7 +52,7 @@ class SplitMultipart:
         # Create action that will start plugin configuration
         self.action = QAction(
             QIcon(":/plugins/splitmultipart/icon.svg"),
-            u"Split Selected Multipart features", self.iface.mainWindow())
+            QCoreApplication.translate('Multipart split', u"Split Selected Multipart features"), self.iface.mainWindow())
         self.action.setEnabled(False)
         
         # connect to signals for button behavior
@@ -94,7 +94,7 @@ class SplitMultipart:
         n_of_splitted_features = 0
         n_of_new_features = 0
 
-        layer.beginEditCommand("Split features")
+        layer.beginEditCommand(QCoreApplication.translate('Multipart split','Split features'))
         # Iterate over all selected feature to find multipart features
         for feature in layer.selectedFeatures():
             geom = feature.geometry()
@@ -130,12 +130,11 @@ class SplitMultipart:
         if n_of_new_features > 0:
             layer.addFeatures(new_features, False)
             layer.endEditCommand()
-            message = "Splited " + str(n_of_splitted_features) + " multipart feature(s) into " + \
-            str(n_of_new_features + n_of_splitted_features) + " singlepart ones."
+            message = QCoreApplication.translate('Multipart split', "Splited %d multipart feature(s) into %d singlepart ones." %(n_of_splitted_features,n_of_new_features + n_of_splitted_features))
         else:
             layer.destroyEditCommand()
-            message = "No multipart features selected."
+            message = QCoreApplication.translate('Multipart split',"No multipart features selected.")
         
         # inform user about the end of the process and the results
 
-        self.iface.messageBar().pushMessage("Multipart split plugin",message,0,10)
+        self.iface.messageBar().pushMessage("Multipart split plugin",message,0)

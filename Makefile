@@ -24,7 +24,7 @@ PLUGIN_UPLOAD = $(CURDIR)/plugin_upload.py
 
 # translation
 SOURCES = splitmultipart.py ui_splitmultipart.py __init__.py 
-#TRANSLATIONS = i18n/splitmultipart_en.ts
+TRANSLATIONS = i18n/splitmultipart_en.ts
 TRANSLATIONS = 
 
 # global
@@ -60,7 +60,7 @@ compile: $(UI_FILES) $(RESOURCE_FILES)
 deploy: compile doc transcompile
 	mkdir -p $(HOME)/.qgis2/python/plugins/$(PLUGINNAME)
 	cp -vf $(PY_FILES) $(HOME)/.qgis2/python/plugins/$(PLUGINNAME)
-	cp -vf $(UI_FILES) $(HOME)/.qgis2/python/plugins/$(PLUGINNAME)
+#	cp -vf $(UI_FILES) $(HOME)/.qgis2/python/plugins/$(PLUGINNAME)
 	cp -vf $(RESOURCE_FILES) $(HOME)/.qgis2/python/plugins/$(PLUGINNAME)
 	cp -vf $(EXTRAS) $(HOME)/.qgis2/python/plugins/$(PLUGINNAME)
 	cp -vfr i18n $(HOME)/.qgis2/python/plugins/$(PLUGINNAME)
