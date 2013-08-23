@@ -12,7 +12,7 @@
 name=Multipart Split
 qgisMinimumVersion=2.0
 description=Split selected multipart features during edit session
-version=0.5
+version=0.6
 author=Alexandre Neto
 email=senhor.neto@gmail.com
 
@@ -22,11 +22,18 @@ email=senhor.neto@gmail.com
 
 # Uncomment the following line and add your changelog entries:
 changelog=
-    0.4 code adapted to work in master version
-    0.5 code adapted to work with new SIP API 2.0
-        new svg icon
-        non blocking messages with messageBar
-        translation support added
+    0.4
+    code adapted to work in master version
+    0.5
+    code adapted to work with new SIP API 2.0
+    new svg icon
+    non blocking messages with messageBar
+    translation support added
+    button behaviour connected to editing status
+    0.6
+    small patch to prevented plugin to run with no layer selected
+    Added pt translation
+        
 
 # tags are comma separated with spaces allowed
 tags=multipart; singlepart; split

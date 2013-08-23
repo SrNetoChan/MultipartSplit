@@ -1,4 +1,0 @@
-MultipartSplit
-==============
-
-MultipartSplit QGIS Plugin

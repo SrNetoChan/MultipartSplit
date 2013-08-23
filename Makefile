@@ -23,9 +23,9 @@ PLUGIN_UPLOAD = $(CURDIR)/plugin_upload.py
 # Makefile for a PyQGIS plugin 
 
 # translation
-SOURCES = splitmultipart.py ui_splitmultipart.py __init__.py 
-TRANSLATIONS = i18n/splitmultipart_en.ts
-TRANSLATIONS = 
+SOURCES = splitmultipart.py __init__.py 
+TRANSLATIONS = i18n/splitmultipart_en.ts i18n/splitmultipart_pt.ts
+
 
 # global
 
