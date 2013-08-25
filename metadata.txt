@@ -31,7 +31,7 @@ changelog=
     translation support added
     button behaviour connected to editing status
     0.6
-    small patch to prevented plugin to run with no layer selected
+    solved bug when no layer is selected
     Added pt translation
         
 
