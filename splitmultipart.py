@@ -95,10 +95,8 @@ class SplitMultipart:
 
     # run method that performs all the real work
     def run(self):
-        
         layer = self.canvas.currentLayer()
         provider = layer.dataProvider()
-        new_features = []
         n_of_splitted_features = 0
         n_of_new_features = 0
 
@@ -111,7 +109,6 @@ class SplitMultipart:
                 if geom.isMultipart():
                     n_of_splitted_features += 1
                     temp_feature = QgsFeature()
-                    
                     # Get attributes from original feature
                     new_attributes = feature.attributes()
                     for j in range(new_attributes.__len__()):
@@ -126,22 +123,21 @@ class SplitMultipart:
                     # single geometry and the attributes of the original feature
                     
                     for i in range(1,len(parts)):
+                        n_of_new_features += 1 
                         temp_feature.setGeometry(parts[i])
                         new_features.append(QgsFeature(temp_feature))
                     # update feature geometry to hold first part single geometry
                     # (this way one of the output feature keeps the original Id)
                     feature.setGeometry(parts[0])
                     layer.updateFeature(feature)
+                    layer.addFeatures(new_features, False)
 
-        # add new features to layer
-        n_of_new_features = len(new_features)
+        # End process and inform user about the results
         if n_of_new_features > 0:
-            layer.addFeatures(new_features, False)
             layer.endEditCommand()
             message = QCoreApplication.translate('Multipart split', "Splited %d multipart feature(s) into %d singlepart ones.") %(n_of_splitted_features,n_of_new_features + n_of_splitted_features)
         else:
             layer.destroyEditCommand()
             message = QCoreApplication.translate('Multipart split',"No multipart features selected.")
-                
-        # inform user about the end of the process and the results
+
         self.iface.messageBar().pushMessage("Multipart split plugin",message,0)

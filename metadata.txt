@@ -33,6 +33,7 @@ changelog=
     0.6
     solved bug when no layer is selected
     Added pt translation
+    memory usage improvement?
         
 
 # tags are comma separated with spaces allowed
@@ -43,7 +44,7 @@ tracker=http://hub.qgis.org/projects/multipartsplit/issues
 repository=https://github.com/SrNetoChan/MultipartSplit.git
 icon=icon.svg
 # experimental flag
-experimental=True
+experimental=False
 
 # deprecated flag (applies to the whole plugin, not just a single version
 deprecated=False

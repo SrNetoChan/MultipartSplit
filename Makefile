@@ -24,7 +24,7 @@ PLUGIN_UPLOAD = $(CURDIR)/plugin_upload.py
 
 # translation
 SOURCES = splitmultipart.py __init__.py 
-TRANSLATIONS = i18n/splitmultipart_en.ts i18n/splitmultipart_pt.ts i18n/splitmultipart_fr.ts
+TRANSLATIONS = i18n/splitmultipart_en.ts i18n/splitmultipart_pt.ts
 
 
 # global
@@ -37,7 +37,7 @@ EXTRAS = icon.svg metadata.txt
 
 UI_FILES = 
 
-RESOURCE_FILES = resources_rc.py
+RESOURCE_FILES = resources_rc.py resources.qrc
 
 HELP = help/build/html
 
