@@ -113,9 +113,10 @@ class SplitMultipart:
                     # Get attributes from original feature
                     new_attributes = feature.attributes()
                     
-                    for j in range(new_attributes.__len__()):
-                        if provider.defaultValue(j): # != None:
-                            new_attributes[j] = provider.defaultValue(j)
+                    # When attribute is a Primary Key, replace by default value
+                    ### This is not working well with spatialite provider###
+                    for j in provider.pkAttributeIndexes():
+                        new_attributes[j] = provider.defaultValue(j)
                             
                     temp_feature.setAttributes(new_attributes)
                         
