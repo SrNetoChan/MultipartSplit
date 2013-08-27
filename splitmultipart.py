@@ -107,13 +107,16 @@ class SplitMultipart:
             # if feature geometry is multipart starts split processing
             if geom != None:
                 if geom.isMultipart():
+                    new_features = []
                     n_of_splitted_features += 1
                     temp_feature = QgsFeature()
                     # Get attributes from original feature
                     new_attributes = feature.attributes()
+                    
                     for j in range(new_attributes.__len__()):
-                        if provider.defaultValue(j) != None:
+                        if provider.defaultValue(j): # != None:
                             new_attributes[j] = provider.defaultValue(j)
+                            
                     temp_feature.setAttributes(new_attributes)
                         
                     # Get parts geometries from original feature
@@ -140,4 +143,4 @@ class SplitMultipart:
             layer.destroyEditCommand()
             message = QCoreApplication.translate('Multipart split',"No multipart features selected.")
 
-        self.iface.messageBar().pushMessage("Multipart split plugin",message,0)
+        self.iface.messageBar().pushMessage("Multipart split plugin",message,0,10)
