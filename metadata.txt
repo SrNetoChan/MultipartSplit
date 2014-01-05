@@ -12,7 +12,7 @@
 name=Multipart Split
 qgisMinimumVersion=2.0
 description=Split selected multipart features during edit session
-version=0.6
+version=0.8
 author=Alexandre Neto
 email=senhor.neto@gmail.com
 
@@ -33,7 +33,11 @@ changelog=
     0.6
     solved bug when no layer is selected
     Added pt translation
-    memory usage improvement?
+    memory usage improvement
+    0.7
+    solved bug when non vector layer was selected
+    0.8
+    solved bug #9291 (duplicated signal connections)
         
 
 # tags are comma separated with spaces allowed

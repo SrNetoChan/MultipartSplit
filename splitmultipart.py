@@ -23,6 +23,7 @@ MultipartSplit
 from qgis.core import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+
 # Initialize Qt resources from file resources.py
 import resources_rc
 
@@ -64,30 +65,37 @@ class SplitMultipart:
         self.iface.advancedDigitizeToolBar().addAction(self.action)
         self.iface.editMenu().addAction(self.action)
     
+    # function to activate or deactivate the plugin buttons
     def toggle(self):
+         # get current active layer 
         layer = self.canvas.currentLayer()
         
-        # Decide whether the plugin button is enable or disable
         if layer:
-            # set enable
-            if layer.isEditable() and layer.selectedFeatureCount() > 0:
-                self.action.setEnabled(True)
+            # disconnect all previously connect signals in current layer
+            try:
+                layer.editingStarted.disconnect(self.toggle)
+            except:
+                pass
+            try:
+                layer.editingStopped.disconnect(self.toggle)
+            except:
+                pass
+            
+            # check if current layer is editable and has selected features
+            # and decide whether the plugin button should be enable or disable
+            if layer.isEditable():
+                if layer.selectedFeatureCount() > 0:
+                    self.action.setEnabled(True)
+                else:
+                    self.action.setEnabled(False)
                 layer.editingStopped.connect(self.toggle)
-                try:
-                    layer.editingStarted.disconnect(self.toggle)
-                except:
-                    pass
-            # set disable    
+            # layer is not editable    
             else:
                 self.action.setEnabled(False)
                 layer.editingStarted.connect(self.toggle)
-                try:
-                    layer.editingStopped.disconnect(self.toggle)
-                except:
-                    pass
         else:
             self.action.setEnabled(False)
-
+    
     def unload(self):
         # Remove the plugin menu item and icon
         self.iface.editMenu().removeAction(self.action)
@@ -116,7 +124,10 @@ class SplitMultipart:
                     # When attribute is a Primary Key, replace by default value
                     ### This is not working well with spatialite provider###
                     for j in provider.pkAttributeIndexes():
-                        new_attributes[j] = provider.defaultValue(j)
+                        if provider.defaultValue(j):
+                            new_attributes[j] = provider.defaultValue(j)
+                        else:
+                            new_attributes[j] = QPyNullVariant(int)
                             
                     temp_feature.setAttributes(new_attributes)
                         
@@ -126,12 +137,17 @@ class SplitMultipart:
                     # from 2nd to last part create a new features using their
                     # single geometry and the attributes of the original feature
                     
+                    # Convert part to multiType to prevent errors in Spatialite
+                    for part in parts:
+                        part.convertToMultiType()
+                   
                     for i in range(1,len(parts)):
-                        n_of_new_features += 1 
+                        n_of_new_features += 1
                         temp_feature.setGeometry(parts[i])
+                        temp_feature.geometry().convertToMultiType()
                         new_features.append(QgsFeature(temp_feature))
                     # update feature geometry to hold first part single geometry
-                    # (this way one of the output feature keeps the original Id)
+                    # (this way one of the output features keeps the original Id)
                     feature.setGeometry(parts[0])
                     layer.updateFeature(feature)
                     layer.addFeatures(new_features, False)
