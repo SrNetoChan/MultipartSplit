@@ -12,7 +12,7 @@
 name=Multipart Split
 qgisMinimumVersion=2.0
 description=Split selected multipart features during edit session
-version=0.8
+version=0.9
 author=Alexandre Neto
 email=senhor.neto@gmail.com
 
@@ -38,6 +38,8 @@ changelog=
     solved bug when non vector layer was selected
     0.8
     solved bug #9291 (duplicated signal connections)
+    0.9
+    solved bug #9296 non vector layers error
         
 
 # tags are comma separated with spaces allowed

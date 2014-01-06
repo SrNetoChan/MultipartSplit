@@ -67,10 +67,10 @@ class SplitMultipart:
     
     # function to activate or deactivate the plugin buttons
     def toggle(self):
-         # get current active layer 
+        # get current active layer 
         layer = self.canvas.currentLayer()
         
-        if layer:
+        if layer and layer.type() == layer.VectorLayer:
             # disconnect all previously connect signals in current layer
             try:
                 layer.editingStarted.disconnect(self.toggle)
