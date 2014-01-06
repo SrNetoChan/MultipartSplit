@@ -31,7 +31,7 @@ def description():
 
 
 def version():
-    return "Version 0.9"
+    return "Version 0.9.1"
 
 
 def icon():
