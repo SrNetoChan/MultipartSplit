@@ -22,34 +22,6 @@
 """
 from __future__ import absolute_import
 
-def name():
-    return "Multipart Split"
-
-
-def description():
-    return "Split selected multipart features during edit session"
-
-
-def version():
-    return "Version 0.10.0"
-
-
-def icon():
-    return "icon.svg"
-
-
-def qgisMinimumVersion():
-    return "3.0"
-
-def author():
-    return "Alexandre Neto"
-
-def email():
-    return "senhor.neto@gmail.com"
-
-#def category():
-#  return "Vector"
-
 def classFactory(iface):
     # load SplitMultipart class from file SplitMultipart
     from .splitmultipart import SplitMultipart

@@ -158,7 +158,7 @@ class SplitMultipart(object):
                     # (this way one of the output features keeps the original Id)
                     feature.setGeometry(parts[0])
                     layer.updateFeature(feature)
-                    layer.addFeatures(new_features, False)
+                    layer.addFeatures(new_features)
 
         # End process and inform user about the results
         if n_of_new_features > 0:
