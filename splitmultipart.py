@@ -20,27 +20,34 @@ MultipartSplit
  ***************************************************************************/
 """
 # Import the PyQt and QGIS libraries
+from __future__ import absolute_import
+from builtins import range
+from builtins import object
 from qgis.core import *
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QAction
+import os.path
 
 # Initialize Qt resources from file resources.py
-import resources_rc
+#from . import resources_rc
 
-class SplitMultipart:
+class SplitMultipart(object):
 
     def __init__(self, iface):
         # Save reference to the QGIS interface
         self.iface = iface
         self.canvas = self.iface.mapCanvas()
         # initialize plugin directory
-        self.plugin_dir = QFileInfo(QgsApplication.qgisUserDbFilePath()).path() + "/python/plugins/splitmultipart"
+        self.plugin_dir = os.path.dirname(__file__)
         # initialize locale
         localePath = ""
         locale = QSettings().value("locale/userLocale", type=str)[0:2]
         
         if QFileInfo(self.plugin_dir).exists():
-            localePath = self.plugin_dir + "/i18n/splitmultipart_" + locale + ".qm"
+            localePath = os.path.join(self.plugin_dir,
+                                      "i18n",
+                                      "splitmultipart_{}.qm".format(locale))
 
         if QFileInfo(localePath).exists():
             self.translator = QTranslator()
@@ -52,8 +59,9 @@ class SplitMultipart:
     def initGui(self):
         # Create action that will start plugin configuration
         self.action = QAction(
-            QIcon(":/plugins/splitmultipart/icon.svg"),
-            QCoreApplication.translate('Multipart split', u"Split Feature(s) Parts"), self.iface.mainWindow())
+            QIcon(os.path.join(self.plugin_dir, "icon.svg")),
+            self.tr(u"Split Feature(s) Parts"),
+            self.iface.mainWindow())
         self.action.setEnabled(False)
         
         # connect to signals for button behavior
@@ -161,3 +169,7 @@ class SplitMultipart:
             message = QCoreApplication.translate('Multipart split',"No multipart features selected.")
 
         self.iface.messageBar().pushMessage("Multipart split plugin",message,0,10)
+
+
+    def tr(self, text):
+        return QCoreApplication.translate("Multipart split", text)

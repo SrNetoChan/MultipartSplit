@@ -10,9 +10,9 @@
 
 [general]
 name=Multipart Split
-qgisMinimumVersion=2.0
+qgisMinimumVersion=3.0
 description=Split selected multipart features during edit session
-version=0.9.1
+version=0.10.0
 author=Alexandre Neto
 email=senhor.neto@gmail.com
 
@@ -40,6 +40,8 @@ changelog=
     solved bug #9291 (duplicated signal connections)
     0.9
     solved bug #9296 non vector layers error
+    0.10
+    Upgrade to QGIS 3
         
 
 # tags are comma separated with spaces allowed

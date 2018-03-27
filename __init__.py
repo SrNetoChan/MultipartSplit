@@ -20,7 +20,7 @@
  ***************************************************************************/
  This script initializes the plugin, making it known to QGIS.
 """
-
+from __future__ import absolute_import
 
 def name():
     return "Multipart Split"
@@ -31,7 +31,7 @@ def description():
 
 
 def version():
-    return "Version 0.9.1"
+    return "Version 0.10.0"
 
 
 def icon():
@@ -39,7 +39,7 @@ def icon():
 
 
 def qgisMinimumVersion():
-    return "2.0"
+    return "3.0"
 
 def author():
     return "Alexandre Neto"
@@ -52,5 +52,5 @@ def email():
 
 def classFactory(iface):
     # load SplitMultipart class from file SplitMultipart
-    from splitmultipart import SplitMultipart
+    from .splitmultipart import SplitMultipart
     return SplitMultipart(iface)
