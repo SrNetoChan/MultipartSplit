@@ -135,12 +135,12 @@ class SplitMultipart(object):
                         if provider.defaultValue(j):
                             new_attributes[j] = provider.defaultValue(j)
                         else:
-                            new_attributes[j] = QPyNullVariant(int)
+                            new_attributes[j] = QVariant()
                             
                     temp_feature.setAttributes(new_attributes)
                         
                     # Get parts geometries from original feature
-                    parts = geom.asGeometryCollection ()
+                    parts = geom.asGeometryCollection()
                             
                     # from 2nd to last part create a new features using their
                     # single geometry and the attributes of the original feature
