@@ -113,10 +113,10 @@ class SplitMultipart(object):
     def run(self):
         layer = self.canvas.currentLayer()
         provider = layer.dataProvider()
-        n_of_splitted_features = 0
-        n_of_new_features = 0
+        n_split_feats = 0
+        n_new_feats = 0
 
-        layer.beginEditCommand(QCoreApplication.translate('Multipart split','Split feature(s) parts'))
+        layer.beginEditCommand(self.tr('Split feature(s) parts'))
         # Iterate over all selected feature to find multipart features
         for feature in layer.selectedFeatures():
             geom = feature.geometry()
@@ -124,7 +124,7 @@ class SplitMultipart(object):
             if geom != None:
                 if geom.isMultipart():
                     new_features = []
-                    n_of_splitted_features += 1
+                    n_split_feats += 1
                     temp_feature = QgsFeature()
                     # Get attributes from original feature
                     new_attributes = feature.attributes()
@@ -150,7 +150,7 @@ class SplitMultipart(object):
                         part.convertToMultiType()
                    
                     for i in range(1,len(parts)):
-                        n_of_new_features += 1
+                        n_new_feats += 1
                         temp_feature.setGeometry(parts[i])
                         temp_feature.geometry().convertToMultiType()
                         new_features.append(QgsFeature(temp_feature))
@@ -161,12 +161,15 @@ class SplitMultipart(object):
                     layer.addFeatures(new_features)
 
         # End process and inform user about the results
-        if n_of_new_features > 0:
+        if n_new_feats > 0:
             layer.endEditCommand()
-            message = QCoreApplication.translate('Multipart split', "Splited %d multipart feature(s) into %d singlepart ones.") %(n_of_splitted_features,n_of_new_features + n_of_splitted_features)
+            message = self.tr("Splited {} multipart feature(s) into {} "
+                              "singlepart ones.".format(n_split_feats,
+                                                        n_new_feats +
+                                                        n_split_feats))
         else:
             layer.destroyEditCommand()
-            message = QCoreApplication.translate('Multipart split',"No multipart features selected.")
+            message = self.tr("No multipart features selected.")
 
         self.iface.messageBar().pushMessage("Multipart split plugin",message,0,10)
 
