@@ -42,6 +42,7 @@ changelog=
     solved bug #9296 non vector layers error
     0.10
     Upgrade to QGIS 3
+    Solves issue with constraints in Spatilite/Geopackage layers
         
 
 # tags are comma separated with spaces allowed
