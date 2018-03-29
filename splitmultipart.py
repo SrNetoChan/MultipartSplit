@@ -123,42 +123,31 @@ class SplitMultipart(object):
             # if feature geometry is multipart starts split processing
             if geom != None:
                 if geom.isMultipart():
-                    new_features = []
                     n_split_feats += 1
-                    temp_feature = QgsFeature()
-                    # Get attributes from original feature
-                    new_attributes = feature.attributes()
-                    
-                    # When attribute is a Primary Key, replace by default value
-                    ### This is not working well with spatialite provider###
-                    for j in provider.pkAttributeIndexes():
-                        if provider.defaultValue(j):
-                            new_attributes[j] = provider.defaultValue(j)
-                        else:
-                            new_attributes[j] = QVariant()
-                            
-                    temp_feature.setAttributes(new_attributes)
-                        
-                    # Get parts geometries from original feature
+
                     parts = geom.asGeometryCollection()
-                            
-                    # from 2nd to last part create a new features using their
-                    # single geometry and the attributes of the original feature
-                    
+
                     # Convert part to multiType to prevent errors in Spatialite
                     for part in parts:
                         part.convertToMultiType()
-                   
+
+                    #Convert list of attributes to dict
+
+                    attributes = {i: v for i, v in enumerate(
+                        feature.attributes())}
+
+                    # from 2nd to last part create a new features using their
+                    # single geometry and the attributes of the original feature
                     for i in range(1,len(parts)):
                         n_new_feats += 1
-                        temp_feature.setGeometry(parts[i])
-                        temp_feature.geometry().convertToMultiType()
-                        new_features.append(QgsFeature(temp_feature))
-                    # update feature geometry to hold first part single geometry
+                        new_feat = QgsVectorLayerUtils.createFeature(layer,
+                                                                     parts[i],
+                                                                     attributes)
+                        layer.addFeature(new_feat)
+                    # update feature geometry to hold first part of geometry
                     # (this way one of the output features keeps the original Id)
                     feature.setGeometry(parts[0])
                     layer.updateFeature(feature)
-                    layer.addFeatures(new_features)
 
         # End process and inform user about the results
         if n_new_feats > 0:
