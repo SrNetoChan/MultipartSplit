@@ -12,10 +12,7 @@
 name=Multipart Split
 qgisMinimumVersion=3.0
 description=Split selected multipart features during edit session
-about=
-    The plugins adds a "Splits feature(s) parts" item to the Edit menu,
-    and a similar button in the Advanced digitizing toolbar. The buttons are
-    only enabled when the current layer is in edit mode and has selected features.
+about=The plugins adds a "Splits feature(s) parts" item to the Edit menu, and a similar button in the Advanced digitizing toolbar. The buttons are only enabled when the current layer is in edit mode and has features selected.
 version=0.10.0
 author=Alexandre Neto
 email=senhor.neto@gmail.com
@@ -45,12 +42,12 @@ changelog=
     0.9
     solved bug #9296 non vector layers error
     0.10
-    Upgrade to QGIS 3
-    Solves issue with constraints in Spatilite/Geopackage layers
+    Refactor and upgrade to QGIS 3
+    Solved issue with constraints in Spatilite/Geopackage layers
         
 
 # tags are comma separated with spaces allowed
-tags=multipart; singlepart; split
+tags=multipart; singlepart; split; explode
 
 homepage=http://hub.qgis.org/projects/multipartsplit
 tracker=http://hub.qgis.org/projects/multipartsplit/issues
