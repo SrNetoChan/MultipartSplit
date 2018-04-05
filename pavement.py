@@ -16,15 +16,15 @@ from paver.doctools import html
 
 options(
     plugin = Bunch(
-        name = 'terrainanalysis',
-        ext_libs = path('terrainanalysis/extlibs'),
-        ext_src = path('terrainanalysis/ext-src'),
-        source_dir = path('terrainanalysis'),
+        name = 'splitmultipart',
+        ext_libs=path('splitmultipart/extlibs'),
+        ext_src=path('splitmultipart/ext-src'),
+        source_dir = path('splitmultipart'),
         package_dir = path('.'),
         tests = ['test', 'tests'],
         excludes = [
             '*.pyc',
-            ".git"
+            '.git',
         ]
     ),
 
@@ -103,7 +103,7 @@ def installdev(options):
 
 @task
 def install3(options):
-    _install(".qgis3")
+    _install(".local/share/QGIS/QGIS3/profiles/default")
 
 
 @task
