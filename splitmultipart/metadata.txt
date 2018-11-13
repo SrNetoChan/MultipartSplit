@@ -44,6 +44,8 @@ changelog=
     0.10
     Refactor and upgrade to QGIS 3
     Solved issue with constraints in Spatilite/Geopackage layers
+    1.0
+    Make plugin no longer experimental
         
 
 # tags are comma separated with spaces allowed
@@ -54,7 +56,7 @@ tracker=http://hub.qgis.org/projects/multipartsplit/issues
 repository=https://github.com/SrNetoChan/MultipartSplit.git
 icon=icon.svg
 # experimental flag
-experimental=True
+experimental=False
 
 # deprecated flag (applies to the whole plugin, not just a single version
 deprecated=False
