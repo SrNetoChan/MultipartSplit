@@ -115,40 +115,56 @@ class SplitMultipart(object):
         provider = layer.dataProvider()
         n_split_feats = 0
         n_new_feats = 0
+        
+        # Get Ids of current selection
+        ls_ids_start = layer.selectedFeatureIds()
+        layer.removeSelection()
 
         layer.beginEditCommand(self.tr('Split feature(s) parts'))
         # Iterate over all selected feature to find multipart features
-        for feature in layer.selectedFeatures():
+        for id in ls_ids_start:
+            feature = layer.getFeature(id)
             geom = feature.geometry()
+            
             # if feature geometry is multipart starts split processing
             if geom != None:
                 if geom.isMultipart():
-                    n_split_feats += 1
-
                     parts = geom.asGeometryCollection()
 
-                    # Convert part to multiType to prevent errors in Spatialite
-                    for part in parts:
-                        part.convertToMultiType()
+                    # Only proceed if feature contains more than one part
+                    if len(parts) > 1:
+                        n_split_feats += 1
 
-                    #Convert list of attributes to dict
+                        # Convert part to multiType to prevent errors in Spatialite
+                        for part in parts:
+                            part.convertToMultiType()
 
-                    attributes = {i: v for i, v in enumerate(
-                        feature.attributes())}
+                        # Convert list of attributes to dict
+                        attributes = {i: v for i, v in enumerate(feature.attributes())}
 
-                    # from 2nd to last part create a new features using their
-                    # single geometry and the attributes of the original feature
-                    for i in range(1,len(parts)):
-                        n_new_feats += 1
-                        new_feat = QgsVectorLayerUtils.createFeature(layer,
-                                                                     parts[i],
-                                                                     attributes)
-                        layer.addFeature(new_feat)
-                    # update feature geometry to hold first part of geometry
-                    # (this way one of the output features keeps the original Id)
-                    feature.setGeometry(parts[0])
-                    layer.updateFeature(feature)
+                        # from 2nd to last part create a new features using their
+                        # single geometry and the attributes of the original feature
+                        new_feats = [QgsVectorLayerUtils.createFeature(layer, parts[i], attributes) for i in range(1, len(parts))]
+                        (result, newFeatures) = provider.addFeatures(new_feats)
+                        n_new_feats += len(new_feats)
 
+                        # Add to current selection all new singlepart features
+                        # from the old multipart feature
+                        new_ids = [id] + [feat.id() for feat in newFeatures]
+                        layer.selectByIds(new_ids, QgsVectorLayer.AddToSelection)
+
+                        # update feature geometry to hold first part of geometry
+                        # (this way one of the output features keeps the original Id)
+                        feature.setGeometry(parts[0])
+                        layer.updateFeature(feature)
+
+        # Reload and reselect all newly created singlepart features
+        # (reloading can hang a bit if the Attribute Table is opened
+        # and contains several thousands features)
+        ls_ids = layer.selectedFeatureIds()
+        layer.reload()
+        layer.selectByIds(ls_ids)
+        
         # End process and inform user about the results
         if n_new_feats > 0:
             layer.endEditCommand()
