@@ -23,11 +23,17 @@ MultipartSplit
 from __future__ import absolute_import
 from builtins import range
 from builtins import object
-from qgis.core import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QAction
 import os.path
+
+from qgis.PyQt.QtCore import QCoreApplication, QFileInfo, QSettings, QTranslator
+from qgis.PyQt.QtGui import QIcon
+
+try:
+    from qgis.PyQt.QtGui import QAction
+except ImportError:
+    from qgis.PyQt.QtWidgets import QAction
+
+from qgis.core import Qgis, QgsMapLayer, QgsVectorLayerUtils
 
 # Initialize Qt resources from file resources.py
 #from . import resources_rc
@@ -42,7 +48,8 @@ class SplitMultipart(object):
         self.plugin_dir = os.path.dirname(__file__)
         # initialize locale
         localePath = ""
-        locale = QSettings().value("locale/userLocale", type=str)[0:2]
+        locale_setting = QSettings().value("locale/userLocale", "", type=str) or ""
+        locale = locale_setting[0:2]
         
         if QFileInfo(self.plugin_dir).exists():
             localePath = os.path.join(self.plugin_dir,
@@ -52,9 +59,7 @@ class SplitMultipart(object):
         if QFileInfo(localePath).exists():
             self.translator = QTranslator()
             self.translator.load(localePath)
-
-            if qVersion() > '4.3.3':
-                QCoreApplication.installTranslator(self.translator)
+            QCoreApplication.installTranslator(self.translator)
 
     def initGui(self):
         # Create action that will start plugin configuration
@@ -66,19 +71,22 @@ class SplitMultipart(object):
         
         # connect to signals for button behavior
         self.action.triggered.connect(self.run)
-        self.iface.currentLayerChanged["QgsMapLayer *"].connect(self.toggle)
-        self.canvas.selectionChanged.connect(self.toggle)
+        self.iface.currentLayerChanged.connect(self._refresh_action_state)
+        self.canvas.selectionChanged.connect(self._refresh_action_state)
 
         # Add toolbar button and menu item
         self.iface.advancedDigitizeToolBar().addAction(self.action)
         self.iface.editMenu().addAction(self.action)
     
+    def _refresh_action_state(self, *_args):
+        self.toggle()
+
     # function to activate or deactivate the plugin buttons
     def toggle(self):
         # get current active layer 
         layer = self.canvas.currentLayer()
         
-        if layer and layer.type() == layer.VectorLayer:
+        if layer and layer.type() == QgsMapLayer.LayerType.VectorLayer:
             # disconnect all previously connect signals in current layer
             try:
                 layer.editingStarted.disconnect(self.toggle)
@@ -106,6 +114,14 @@ class SplitMultipart(object):
     
     def unload(self):
         # Remove the plugin menu item and icon
+        try:
+            self.iface.currentLayerChanged.disconnect(self._refresh_action_state)
+        except Exception:
+            pass
+        try:
+            self.canvas.selectionChanged.disconnect(self._refresh_action_state)
+        except Exception:
+            pass
         self.iface.editMenu().removeAction(self.action)
         self.iface.advancedDigitizeToolBar().removeAction(self.action)
 
@@ -121,7 +137,7 @@ class SplitMultipart(object):
         for feature in layer.selectedFeatures():
             geom = feature.geometry()
             # if feature geometry is multipart starts split processing
-            if geom != None:
+            if geom is not None:
                 if geom.isMultipart():
                     n_split_feats += 1
 
@@ -140,9 +156,11 @@ class SplitMultipart(object):
                     # single geometry and the attributes of the original feature
                     for i in range(1,len(parts)):
                         n_new_feats += 1
-                        new_feat = QgsVectorLayerUtils.createFeature(layer,
-                                                                     parts[i],
-                                                                     attributes)
+                        new_feat = QgsVectorLayerUtils.createFeature(
+                            layer,
+                            parts[i],
+                            attributes,
+                        )
                         layer.addFeature(new_feat)
                     # update feature geometry to hold first part of geometry
                     # (this way one of the output features keeps the original Id)
@@ -152,15 +170,19 @@ class SplitMultipart(object):
         # End process and inform user about the results
         if n_new_feats > 0:
             layer.endEditCommand()
-            message = self.tr("Splited {} multipart feature(s) into {} "
-                              "singlepart ones.".format(n_split_feats,
-                                                        n_new_feats +
-                                                        n_split_feats))
+            message = self.tr(
+                "Split {} multipart feature(s) into {} singlepart ones."
+            ).format(n_split_feats, n_new_feats + n_split_feats)
         else:
             layer.destroyEditCommand()
             message = self.tr("No multipart features selected.")
 
-        self.iface.messageBar().pushMessage("Multipart split plugin",message,0,10)
+        self.iface.messageBar().pushMessage(
+            "Multipart split plugin",
+            message,
+            level=Qgis.MessageLevel.Info,
+            duration=10,
+        )
 
 
     def tr(self, text):

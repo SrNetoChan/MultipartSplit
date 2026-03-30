@@ -11,9 +11,10 @@
 [general]
 name=Multipart Split
 qgisMinimumVersion=3.0
+qgisMaximumVersion=4.99
 description=Split selected multipart features during edit session
 about=The plugins adds a "Splits feature(s) parts" item to the Edit menu, and a similar button in the Advanced digitizing toolbar. The buttons are only enabled when the current layer is in edit mode and has features selected.
-version=0.10.0
+version=1.1.0
 author=Alexandre Neto
 email=senhor.neto@gmail.com
 
@@ -23,6 +24,8 @@ email=senhor.neto@gmail.com
 
 # Uncomment the following line and add your changelog entries:
 changelog=
+    1.1.0
+    Add QGIS 4 / Qt6 compatibility while keeping QGIS 3 support
     0.4
     code adapted to work in master version
     0.5
