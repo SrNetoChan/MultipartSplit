@@ -19,18 +19,17 @@ MultipartSplit
  *                                                                         *
  ***************************************************************************/
 """
-# Import the PyQt and QGIS libraries
+# Import the PyQt/PySide and QGIS libraries
 from __future__ import absolute_import
 from builtins import range
 from builtins import object
 from qgis.core import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QAction
-import os.path
 
-# Initialize Qt resources from file resources.py
-#from . import resources_rc
+from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, QFileInfo
+from qgis.PyQt.QtGui import QIcon
+from qgis.PyQt.QtWidgets import QAction
+
+import os.path
 
 class SplitMultipart(object):
 
@@ -52,9 +51,7 @@ class SplitMultipart(object):
         if QFileInfo(localePath).exists():
             self.translator = QTranslator()
             self.translator.load(localePath)
-
-            if qVersion() > '4.3.3':
-                QCoreApplication.installTranslator(self.translator)
+            QCoreApplication.installTranslator(self.translator)
 
     def initGui(self):
         # Create action that will start plugin configuration
@@ -160,8 +157,11 @@ class SplitMultipart(object):
             layer.destroyEditCommand()
             message = self.tr("No multipart features selected.")
 
-        self.iface.messageBar().pushMessage("Multipart split plugin",message,0,10)
-
+        self.iface.messageBar().pushMessage(
+            "Multipart split plugin",
+            message,
+            level=Qgis.MessageLevel.Info,
+            duration=10)
 
     def tr(self, text):
         return QCoreApplication.translate("Multipart split", text)
