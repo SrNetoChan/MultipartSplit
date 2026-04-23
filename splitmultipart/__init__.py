@@ -6,7 +6,7 @@
  Split selected multipart features during edit session
                              -------------------
         begin                : 2013-01-17
-        copyright            : (C) 2013 by Alexandre Neto
+        copyright            : (C) 2013 - 2026 by Alexandre Neto
         email                : senhor.neto@gmail.com
  ***************************************************************************/
 
@@ -21,6 +21,7 @@
  This script initializes the plugin, making it known to QGIS.
 """
 from __future__ import absolute_import
+
 
 def classFactory(iface):
     # load SplitMultipart class from file SplitMultipart
